@@ -11,7 +11,7 @@
 
 ---
 <p align="center">
-  <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot.png" alt="Logo" width="200"/>
+  <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot.png" alt="AFOT-IDE Logo" width="900"/>
 </p>
 
 ## Why AFOT-IDE?
