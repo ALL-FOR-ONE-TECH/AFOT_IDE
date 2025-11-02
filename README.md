@@ -10,6 +10,9 @@
 🚀 **[Download Latest Release](https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases/latest)** | 📖 **[Documentation](#documentation)** | 🐛 **[Report Issues](https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/issues)**
 
 ---
+<p align="center">
+  <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot.png" alt="Logo" width="200"/>
+</p>
 
 ## Why AFOT-IDE?
 
