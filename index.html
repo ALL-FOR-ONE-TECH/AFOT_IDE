@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AFOT-IDE - Fast Terminal-Based IDE for Developers</title>
-    <meta name="description" content="Lightning-fast, keyboard-driven terminal IDE with integrated file explorer, code editor, and multi-tab terminal support.">
+    <meta name="description"
+        content="Lightning-fast, keyboard-driven terminal IDE with integrated file explorer, code editor, and multi-tab terminal support.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Outfit:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -17,16 +25,18 @@
             --primary-dark: #6b7cdf;
             --secondary: #c89cff;
             --accent: #00d9ff;
-            --dark: #0a0a0a;
-            --dark-light: #151515;
-            --dark-lighter: #1f1f1f;
-            --text: #e8e8e8;
-            --text-muted: #999;
+            --dark: #050505;
+            --dark-light: #0f0f0f;
+            --dark-lighter: #1a1a1a;
+            --text: #f0f0f0;
+            --text-muted: #a0a0a0;
             --gradient: linear-gradient(135deg, #8b9cff 0%, #c89cff 100%);
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--dark);
             color: var(--text);
             line-height: 1.6;
@@ -41,13 +51,14 @@
 
         /* Navigation */
         nav {
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
+            background: rgba(5, 5, 5, 0.8);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(139, 156, 255, 0.2);
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .nav-content {
@@ -65,16 +76,33 @@
         .logo-img {
             width: 40px;
             height: 40px;
+            border-radius: 50%;
+            background: rgba(139, 156, 255, 0.1);
+            box-shadow:
+                inset -5px -5px 15px rgba(0, 0, 0, 0.4),
+                inset 5px 5px 15px rgba(255, 255, 255, 0.1),
+                0 0 20px rgba(139, 156, 255, 0.3);
             filter: drop-shadow(0 0 10px rgba(139, 156, 255, 0.5));
+            transition: all 0.5s ease;
+        }
+
+        .logo-img:hover {
+            transform: rotate(360deg) scale(1.1);
+            box-shadow:
+                inset -5px -5px 15px rgba(0, 0, 0, 0.6),
+                inset 5px 5px 15px rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(139, 156, 255, 0.6);
         }
 
         .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.8rem;
+            font-weight: 800;
+            font-family: 'Orbitron', sans-serif;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            letter-spacing: 2px;
         }
 
         .nav-links {
@@ -109,13 +137,21 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(139, 156, 255, 0.15) 0%, transparent 60%);
-            animation: pulse 10s ease-in-out infinite;
+            background: radial-gradient(circle, rgba(139, 156, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 30%, rgba(200, 156, 255, 0.1) 0%, transparent 40%);
+            animation: pulse 15s ease-in-out infinite alternate;
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1) rotate(0deg); }
-            50% { transform: scale(1.2) rotate(180deg); }
+
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+
+            50% {
+                transform: scale(1.2) rotate(180deg);
+            }
         }
 
         .hero-content {
@@ -127,25 +163,51 @@
             width: 180px;
             height: 180px;
             margin: 0 auto 2rem;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            box-shadow:
+                inset -15px -15px 40px rgba(0, 0, 0, 0.8),
+                inset 15px 15px 40px rgba(255, 255, 255, 0.1),
+                0 0 50px rgba(139, 156, 255, 0.4);
             filter: drop-shadow(0 0 30px rgba(139, 156, 255, 0.6));
-            animation: float 6s ease-in-out infinite;
+            animation: float 6s ease-in-out infinite, spherePulse 8s ease-in-out infinite alternate;
+            padding: 15px;
+            object-fit: contain;
+        }
+
+        @keyframes spherePulse {
+            0% {
+                box-shadow: inset -15px -15px 40px rgba(0, 0, 0, 0.8), inset 15px 15px 40px rgba(255, 255, 255, 0.1), 0 0 50px rgba(139, 156, 255, 0.4);
+            }
+
+            100% {
+                box-shadow: inset -20px -20px 50px rgba(0, 0, 0, 0.9), inset 20px 20px 50px rgba(255, 255, 255, 0.2), 0 0 80px rgba(139, 156, 255, 0.6);
+            }
         }
 
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
         }
 
         h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1rem;
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
             background: var(--gradient);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            animation: fadeInUp 0.8s ease-out;
-            font-weight: 800;
-            letter-spacing: -0.02em;
+            animation: fadeInUp 1s cubic-bezier(0.2, 0.8, 0.2, 1);
+            font-weight: 900;
+            letter-spacing: -1px;
         }
 
         @keyframes fadeInUp {
@@ -153,6 +215,7 @@
                 opacity: 0;
                 transform: translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -202,14 +265,30 @@
         }
 
         .btn-secondary {
-            background: transparent;
+            background: var(--glass);
             color: var(--text);
-            border: 2px solid var(--primary);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(5px);
         }
 
         .btn-secondary:hover {
-            background: rgba(139, 156, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--primary);
             transform: translateY(-3px);
+        }
+
+        .btn-publish {
+            background: rgba(0, 217, 255, 0.1);
+            color: var(--accent);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            backdrop-filter: blur(5px);
+        }
+
+        .btn-publish:hover {
+            background: rgba(0, 217, 255, 0.2);
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 217, 255, 0.2);
         }
 
         .badges {
@@ -306,11 +385,12 @@
         }
 
         .feature-card {
-            background: var(--dark-lighter);
+            background: var(--glass);
             padding: 2.5rem;
-            border-radius: 16px;
-            border: 1px solid rgba(139, 156, 255, 0.15);
-            transition: all 0.4s;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
@@ -399,8 +479,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .code-block {
@@ -543,13 +628,14 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Navigation -->
     <nav>
         <div class="container">
             <div class="nav-content">
                 <div class="logo-container">
-                    <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/logo.png" alt="AFOT-IDE Logo" class="logo-img">
+                    <img src="assets/afotlogo.png" alt="AFOT-IDE Logo" class="logo-img">
                     <div class="logo">AFOT-IDE</div>
                 </div>
                 <ul class="nav-links">
@@ -567,11 +653,13 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/logo.png" alt="AFOT-IDE Logo" class="hero-logo">
-                
+                <img src="assets/afotlogo.png" alt="AFOT-IDE Logo" class="hero-logo">
+
                 <h1>AFOT-IDE</h1>
-                <p class="subtitle">Lightning-fast, keyboard-driven terminal IDE combining a powerful file explorer, code editor, and integrated terminal with multi-tab support. Built for developers who value speed, efficiency, and a distraction-free coding environment.</p>
-                
+                <p class="subtitle">Lightning-fast, keyboard-driven terminal IDE combining a powerful file explorer,
+                    code editor, and integrated terminal with multi-tab support. Built for developers who value speed,
+                    efficiency, and a distraction-free coding environment.</p>
+
                 <div class="cta-buttons">
                     <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases/latest" class="btn btn-primary">
                         📥 Download v1.0.0
@@ -579,13 +667,18 @@
                     <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE" class="btn btn-secondary">
                         ⭐ Star on GitHub
                     </a>
+                    <button onclick="publishHero()" class="btn btn-publish" id="publish-btn">
+                        📸 Publish Preview
+                    </button>
                 </div>
 
                 <div class="badges">
                     <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" alt="Version" class="badge">
                     <img src="https://img.shields.io/badge/license-Proprietary-red.svg" alt="License" class="badge">
-                    <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg" alt="Platform" class="badge">
-                    <img src="https://img.shields.io/github/stars/ALL-FOR-ONE-TECH/AFOT_IDE?style=social" alt="GitHub stars" class="badge">
+                    <img src="https://img.shields.io/badge/platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey.svg"
+                        alt="Platform" class="badge">
+                    <img src="https://img.shields.io/github/stars/ALL-FOR-ONE-TECH/AFOT_IDE?style=social"
+                        alt="GitHub stars" class="badge">
                 </div>
             </div>
         </div>
@@ -595,18 +688,18 @@
     <section class="screenshots-gallery" id="screenshots">
         <div class="container">
             <div class="main-screenshot">
-                <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot.png" alt="AFOT-IDE Main Interface">
+                <img src="assets/Screenshot.png" alt="AFOT-IDE Main Interface">
             </div>
-            
+
             <div class="thumbnail-grid">
                 <div class="thumbnail">
-                    <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot1.png" alt="File Explorer">
+                    <img src="assets/Screenshot1.png" alt="File Explorer">
                 </div>
                 <div class="thumbnail">
-                    <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot2.png" alt="Code Editor">
+                    <img src="assets/Screenshot2.png" alt="Code Editor">
                 </div>
                 <div class="thumbnail">
-                    <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/Screenshot3.png" alt="Terminal Integration">
+                    <img src="assets/Screenshot3.png" alt="Terminal Integration">
                 </div>
             </div>
         </div>
@@ -620,37 +713,44 @@
                 <div class="feature-card">
                     <div class="feature-icon">⚡</div>
                     <h3>Lightning Performance</h3>
-                    <p>Terminal-native architecture with minimal resource usage. Launch in milliseconds and enjoy smooth editing even on low-end systems. Single binary under 10MB with no dependencies required.</p>
+                    <p>Terminal-native architecture with minimal resource usage. Launch in milliseconds and enjoy smooth
+                        editing even on low-end systems. Single binary under 10MB with no dependencies required.</p>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">⌨️</div>
                     <h3>Full Keyboard Control</h3>
-                    <p>Navigate, edit, and execute commands without ever touching the mouse. Every action has a keyboard shortcut. Designed for developers who value efficiency and speed in their workflow.</p>
+                    <p>Navigate, edit, and execute commands without ever touching the mouse. Every action has a keyboard
+                        shortcut. Designed for developers who value efficiency and speed in their workflow.</p>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">💻</div>
                     <h3>Integrated Terminal</h3>
-                    <p>Real PTY terminal with multi-tab support built right in. Run shell commands, manage processes, and work with multiple terminal sessions simultaneously. Supports bash, zsh, PowerShell, and more.</p>
+                    <p>Real PTY terminal with multi-tab support built right in. Run shell commands, manage processes,
+                        and work with multiple terminal sessions simultaneously. Supports bash, zsh, PowerShell, and
+                        more.</p>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">🗂️</div>
                     <h3>Smart File Explorer</h3>
-                    <p>Fast directory navigation with intuitive keyboard shortcuts. Browse large project structures efficiently, open files instantly, and traverse directories with lightning speed.</p>
+                    <p>Fast directory navigation with intuitive keyboard shortcuts. Browse large project structures
+                        efficiently, open files instantly, and traverse directories with lightning speed.</p>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">✏️</div>
                     <h3>Intelligent Editor</h3>
-                    <p>Syntax-aware text editing with auto-indentation for clean code. Line-by-line navigation, page scrolling, UTF-8 support for international characters, and essential editing features.</p>
+                    <p>Syntax-aware text editing with auto-indentation for clean code. Line-by-line navigation, page
+                        scrolling, UTF-8 support for international characters, and essential editing features.</p>
                 </div>
 
                 <div class="feature-card">
                     <div class="feature-icon">🌍</div>
                     <h3>Cross-Platform Ready</h3>
-                    <p>Works seamlessly on Linux, macOS, and Windows. Perfect for remote servers, SSH sessions, and local development. One tool for all your platforms.</p>
+                    <p>Works seamlessly on Linux, macOS, and Windows. Perfect for remote servers, SSH sessions, and
+                        local development. One tool for all your platforms.</p>
                 </div>
             </div>
         </div>
@@ -660,7 +760,7 @@
     <section class="installation" id="installation">
         <div class="container">
             <h2 class="section-title">Get Started in Seconds</h2>
-            
+
             <div class="install-tabs">
                 <button class="tab-btn active" onclick="showTab('debian')">🐧 Debian/Ubuntu</button>
                 <button class="tab-btn" onclick="showTab('windows')">🪟 Windows</button>
@@ -689,7 +789,8 @@ AFOT-IDE</code>
 AFOT-IDE</code>
                 </div>
                 <p style="margin-top: 1.5rem; text-align: center; color: var(--text-muted);">
-                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases/latest" style="color: var(--primary); font-weight: 600;">📦 Download Windows Installer →</a>
+                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases/latest"
+                        style="color: var(--primary); font-weight: 600;">📦 Download Windows Installer →</a>
                 </p>
             </div>
 
@@ -700,7 +801,8 @@ AFOT-IDE</code>
 # Check the GitHub repository for build instructions</code>
                 </div>
                 <p style="margin-top: 1.5rem; text-align: center; color: var(--text-muted);">
-                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE" style="color: var(--primary); font-weight: 600;">🔨 Build from Source →</a>
+                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE"
+                        style="color: var(--primary); font-weight: 600;">🔨 Build from Source →</a>
                 </p>
             </div>
         </div>
@@ -710,7 +812,7 @@ AFOT-IDE</code>
     <section class="shortcuts" id="shortcuts">
         <div class="container">
             <h2 class="section-title">Master the Keyboard</h2>
-            
+
             <div class="shortcut-category">
                 <h3>⚙️ Global Commands</h3>
                 <div class="shortcuts-grid">
@@ -810,9 +912,10 @@ AFOT-IDE</code>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <img src="https://raw.githubusercontent.com/ALL-FOR-ONE-TECH/AFOT_IDE/main/assets/logo.png" alt="AFOT-IDE" class="footer-logo">
+                    <img src="assets/afotlogo.png" alt="AFOT-IDE" class="footer-logo">
                     <h3>AFOT-IDE</h3>
-                    <p style="color: var(--text-muted); line-height: 1.8;">Fast terminal-based IDE for developers who value speed, efficiency, and a distraction-free coding environment.</p>
+                    <p style="color: var(--text-muted); line-height: 1.8;">Fast terminal-based IDE for developers who
+                        value speed, efficiency, and a distraction-free coding environment.</p>
                     <p style="margin-top: 1.5rem; color: var(--text-muted);">
                         Created by <strong style="color: var(--primary);">MR.V2K</strong><br>
                         <span style="font-size: 0.9rem;">Developer at ALL-FOR-ONE-TECH</span>
@@ -837,7 +940,8 @@ AFOT-IDE</code>
             <div class="footer-bottom">
                 <p>&copy; 2025 ALL-FOR-ONE-TECH. All rights reserved.</p>
                 <p style="margin-top: 0.75rem; font-size: 0.95rem;">
-                    Proprietary License | Developed with ❤️ by <strong style="color: var(--primary);">karthikeyanV2K (MR.V2K)</strong>
+                    Proprietary License | Developed with ❤️ by <strong style="color: var(--primary);">karthikeyanV2K
+                        (MR.V2K)</strong>
                 </p>
                 <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
                     Last updated: January 2025
@@ -850,10 +954,10 @@ AFOT-IDE</code>
         function showTab(tabName) {
             const tabs = document.querySelectorAll('.tab-content');
             const buttons = document.querySelectorAll('.tab-btn');
-            
+
             tabs.forEach(tab => tab.classList.remove('active'));
             buttons.forEach(btn => btn.classList.remove('active'));
-            
+
             document.getElementById(tabName).classList.add('active');
             event.target.classList.add('active');
         }
@@ -877,17 +981,48 @@ AFOT-IDE</code>
             const scrolled = window.pageYOffset;
             const hero = document.querySelector('.hero');
             if (hero && scrolled < window.innerHeight) {
-                hero.style.transform = `translateY(${scrolled * 0.5}px)`;
+                hero.style.transform = `translateY(${scrolled * 0.3}px)`;
+                hero.style.opacity = 1 - (scrolled / (window.innerHeight * 0.8));
             }
         });
+
+        async function publishHero() {
+            const btn = document.getElementById('publish-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = 'Rendering...';
+            btn.disabled = true;
+
+            const hero = document.querySelector('.hero');
+
+            try {
+                const canvas = await html2canvas(hero, {
+                    backgroundColor: '#050505',
+                    scale: 2,
+                    logging: false,
+                    useCORS: true,
+                    allowTaint: true
+                });
+
+                const link = document.createElement('a');
+                link.download = `AFOT-IDE-Publish-${new Date().getTime()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+
+                btn.innerHTML = '✅ Published!';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 2000);
+            } catch (err) {
+                console.error('Publish failed:', err);
+                btn.innerHTML = '❌ Failed';
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                }, 2000);
+            }
+        }
     </script>
 </body>
-</html>Resources</h3>
-                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE">📦 GitHub Repository</a>
-                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases">🚀 Releases</a>
-                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/issues">🐛 Report Issues</a>
-                    <a href="https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/discussions">💬 Discussions</a>
-                </div>
 
-                <div class="footer-section">
-                    <h3>
+</html>

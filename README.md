@@ -7,7 +7,7 @@
 
 **AFOT-IDE** is a lightweight, keyboard-driven terminal IDE combining a powerful file explorer, code editor, and integrated terminal with multi-tab support. Built for developers who value speed, efficiency, and a distraction-free coding environment.
 
-🚀 **[Download Latest Release](https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases/latest)** | 📖 **[Documentation](#documentation)** | 🐛 **[Report Issues](https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/issues)**
+🚀 **[Live Website](https://all-for-one-tech.github.io/AFOT_IDE/)** | **[Download Latest Release](https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/releases/latest)** | 📖 **[Documentation](#documentation)** | 🐛 **[Report Issues](https://github.com/ALL-FOR-ONE-TECH/AFOT_IDE/issues)**
 
 ---
 <p align="center">
